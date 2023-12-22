@@ -5,26 +5,30 @@ from users.models import User, Profile
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from products.models import Products
+
 
 # Create your views here.
 
 def index(request):
-    return render(request, "index.html")
+    all_products = Products.objects.all()
+    context = {"products": all_products}
+    return render(request, "index.html", context)
 
 def user_login(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
-        print("email: ", email, "password: ", password)
-        check_user = User.objects.filter(email=email)
+        check_user = User.objects.filter(email=email) 
         if check_user.exists() is False:
-            error_message = "Email does not exist"
+            error_message = "Email does not exist" 
             messages.error(request, error_message)
             return redirect("login")
         username = check_user[0].username
         valid_user = authenticate(username=username,
                                   password=password)
         if valid_user:
+            messages.info(request, message='you are logged in')
             login(request, valid_user)
             return redirect("profile")
         else:
@@ -76,3 +80,9 @@ def user_profile(request):
 def user_logout(request):
     logout(request)
     return redirect("login")
+
+
+
+
+
+    

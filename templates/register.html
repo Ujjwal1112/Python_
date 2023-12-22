@@ -10,13 +10,13 @@
             <div class="row justify-content-center">
               <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
-                  {% if messages %}
-                        {% for message in messages %}
-                                <div class="alert alert-danger" role="alert">
-                                  {{ message }}
-                                </div>
-                            {% endfor %}
-                    {% endif %}
+              {% if messages %}
+                {% for message in messages %}
+                        <div class="alert alert-danger" role="alert">
+                          {{ message }}
+                        </div>
+                    {% endfor %}
+            {% endif %}
                 <form action="{% url 'register' %}" method="post" enctype="multipart/form-data" class="mx-1 mx-md-4">
                     {% csrf_token %}
                       {{ form }}

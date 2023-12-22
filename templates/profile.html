@@ -4,6 +4,13 @@
     <section class="vh-150" style="background-color: #f9f3f4;">
   <div class="container py-5">
     <div class="row">
+      {% if messages %}
+      {% for message in messages %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+          {% endfor %}
+  {% endif %}
       <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
