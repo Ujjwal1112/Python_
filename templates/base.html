@@ -29,7 +29,11 @@
             
             {% if request.user.is_authenticated %}
             <a href="{% url 'logout' %}" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fa fa-sign-out m-1 me-md-2"></i><p class="d-none d-md-block mb-0"></p> </a>
-           {% endif %}
+            <a href="{% url 'profile' %}" class="fa fa-solid fa-user"></i><p class="d-none d-md-block mb-0"></p> </a>
+           <a href="{% url 'profile' %}", class="float-start">
+            <img src="{{ request.session.profile_pic }}" height="30" />
+          </a>
+            {% endif %}
             
             
           </div>

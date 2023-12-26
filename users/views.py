@@ -8,9 +8,9 @@ from django.contrib.auth.decorators import login_required
 from products.models import Products
 from django.core.paginator import Paginator
 from django.db.models import Q
+from users.helper import save_image_file_get_url
 
 # Create your views here.
-
 
 
 def index(request):
@@ -42,6 +42,8 @@ def user_login(request):
         if valid_user:
             messages.info(request, message='you are logged in')
             login(request, valid_user)
+            profile_obj = Profile.objects.get(user_id=request.user.pk)
+            request.session["profile_pic"] = profile_obj.profile_picture
             return redirect("profile")
         else:
             error_message = "Invalid email or password"
@@ -83,7 +85,10 @@ def user_register(request):
 
 @login_required()
 def user_profile(request):
+    AVATAR_URL = "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
     profile = Profile.objects.get(user_id=request.user.pk)
+    if profile.profile_picture is None:
+        profile.profile_picture = AVATAR_URL
     context = {"profile": profile}
     return render(request, "profile.html", context)
 
@@ -98,6 +103,30 @@ def new_arrivals(request):
     product_data = {"lagest_products": latest_products}
     return render(request, "new-arrival.html", product_data)
 
+@login_required
+def update_profile(request):
+    profile_obj = Profile.objects.get(user_id=request.user.pk)
+    if request.method =="POST":
+        address = request.POST.get("address")
+        contact = request.POST.get("phone")
+        profile_pic = request.FILES.get("profile_pic")
+        
+        if address and profile_obj.address != address:
+            profile_obj.address = address
+        
+        if contact and profile_obj.contact != contact:
+            profile_obj.contact = contact
+            
+        if profile_pic:
+            url = save_image_file_get_url(request, profile_pic)
+            print('URL:', url)
+            profile_obj.profile_picture = url
+        profile_obj.save()
+        return redirect('profile')
+        
+        
+        
+    
 
 
     
