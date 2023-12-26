@@ -6,13 +6,25 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from products.models import Products
-
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 # Create your views here.
 
+
+
 def index(request):
+    search = request.GET.get('q')
+    sort = request.GET.get('sort', "-created_at")
     all_products = Products.objects.all()
-    context = {"products": all_products}
+    if search:
+        all_products = all_products.filter(Q(specification__icontains = search) | Q(title__icontains=search)) 
+    all_products = all_products.order_by(sort)
+    page_number = request.GET.get('page')
+    pagination = Paginator(all_products, 4)
+    pagination_with_data = pagination.get_page(page_number)
+    total_pages = list(pagination_with_data.paginator.page_range)
+    context = {"pagination_with_data": pagination_with_data, "total_pages": total_pages}
     return render(request, "index.html", context)
 
 def user_login(request):
@@ -81,7 +93,10 @@ def user_logout(request):
     logout(request)
     return redirect("login")
 
-
+def new_arrivals(request):
+    latest_products = Products.objects.all().order_by("-created_at")[:10]
+    product_data = {"lagest_products": latest_products}
+    return render(request, "new-arrival.html", product_data)
 
 
 
