@@ -22,7 +22,7 @@ def shopping_cart(request):
     return render(request, "shopping_cart.html", context )
 
 
-
+@login_required
 def add_to_cart(request, product_id):
     product = Products.objects.get(pk=product_id)
     cart_data = {

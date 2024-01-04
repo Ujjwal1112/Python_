@@ -106,7 +106,7 @@ def new_arrivals(request):
 @login_required
 def update_profile(request):
     profile_obj = Profile.objects.get(user_id=request.user.pk)
-    if request.method =="POST":
+    if request.method =="POST": 
         address = request.POST.get("address")
         contact = request.POST.get("phone")
         profile_pic = request.FILES.get("profile_pic")

@@ -9,3 +9,4 @@ def save_image_file_get_url(request, file):
     url =  request.build_absolute_uri(f'{file_path}')
     return url
     
+    
